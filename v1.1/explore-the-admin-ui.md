@@ -141,4 +141,3 @@ You can click on **View Logs** to see the logs for that node.
 
 The Events panel displays the 10 most recent events logged for the all nodes across the cluster.
 To see the list of all events, click **View all events** on the Events panel. 
-<Insert screenshot>
