@@ -87,7 +87,9 @@ Metric | Description
 --------|----
 Capacity | The maximum storage capacity allocated to CockroachDB across all nodes.
 Available | The free storage capacity available to CockroachDB across all nodes.
- 
+
+{{site.data.alerts.callout_info}}If you are running multiple nodes on a single machine and haven't specified the maximum allocated storage capacity for each node using the --store flag, then the available capacity displayed in the graph is incorrect. This is because when multiple nodes are running on a single machine, the hard disk of the machine is considered as available store for each node. The total available capacity is then displayed as the hard disk size multiplied by the number of nodes on the machine, while in reality, only one hard disk is available for all nodes. {{site.data.alerts.end}}
+
 You can configure the maximum allocated storage capacity for CockroachDB using the --store flag. For more information, see [Start a Node](https://www.cockroachlabs.com/docs/stable/start-a-node.html#store).
  
 
