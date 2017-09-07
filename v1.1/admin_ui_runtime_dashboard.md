@@ -8,7 +8,7 @@ CockroachDB’s Admin UI enables you to monitor runtime metrics such as the Node
 
 <div id="toc"></div>
 
-To view the Runtime Metrics for your cluster, [access the Admin UI](https://www.cockroachlabs.com/docs/dev/explore-the-admin-ui.html#access-the-admin-ui). From the Dashboard drop-down box, select **Runtime**.
+To view the Runtime Metrics for your cluster, [access the Admin UI](explore-the-admin-ui.html#access-the-admin-ui). From the Dashboard drop-down box, select **Runtime**.
 
 #### Viewing time-series graphs for each node
 By default, the time series panel displays the metrics for the entire cluster. To view the metrics for an individual node, select the node from the **Graph** drop-down list.
@@ -19,7 +19,7 @@ The Runtime dashboard displays the following time-series graphs:
 ## Node Count
 <img src="{{ 'images/admin_ui_node_count.png' | relative_url }}" alt="CockroachDB Admin UI Node Count" style="border:1px solid #eee;max-width:100%" />
 The graph displays the number of live nodes in the cluster.
-A dip in the graph indicates decommissioned nodes, dead nodes, or nodes that are not responding. To troubleshoot the dip in the graph, refer to the [Summary panel](https://www.cockroachlabs.com/docs/dev/explore-the-admin-ui.html#summary-panel).
+A dip in the graph indicates decommissioned nodes, dead nodes, or nodes that are not responding. To troubleshoot the dip in the graph, refer to the [Summary panel](explore-the-admin-ui.html#summary-panel).
 
 ## Memory Usage
 <img src="{{ 'images/admin_ui_memory_usage.png' | relative_url }}" alt="CockroachDB Admin UI Memory Usage" style="border:1px solid #eee;max-width:100%" />

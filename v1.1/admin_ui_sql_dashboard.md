@@ -8,7 +8,7 @@ The Cockroach DB Admin UI enables you to monitor the performance of your SQL que
 
 <div id="toc"></div>
 
-To view the SQL Metrics for your cluster, [access the Admin UI](https://www.cockroachlabs.com/docs/dev/explore-the-admin-ui.html#access-the-admin-ui), then from the Dashboard drop-down box, select **SQL**. 
+To view the SQL Metrics for your cluster, [access the Admin UI](explore-the-admin-ui.html#access-the-admin-ui), then from the Dashboard drop-down box, select **SQL**. 
 
 #### Viewing time-series graphs for each node
 By default, the time series panel displays the metrics for the entire cluster. To view the metrics for an individual node, select the node from the **Graph** drop-down list.

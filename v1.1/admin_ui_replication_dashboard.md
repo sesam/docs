@@ -8,7 +8,7 @@ CockroachDB Admin UI enables you to monitor the replication metrics for your clu
 
 <div id="toc"></div>
 
-To view the Replication Metrics for your cluster, [access the Admin UI](https://www.cockroachlabs.com/docs/dev/explore-the-admin-ui.html#access-the-admin-ui), then from the Dashboard drop-down box, select **Replication**. 
+To view the Replication Metrics for your cluster, [access the Admin UI](explore-the-admin-ui.html#access-the-admin-ui), then from the Dashboard drop-down box, select **Replication**. 
 
 #### Viewing time-series graphs for each node
 By default, the time series panel displays the metrics for the entire cluster. To view the metrics for an individual node, select the node from the **Graph** drop-down list.
@@ -53,7 +53,7 @@ Under-replicated | The number of under-replicated ranges across all nodes in the
 <img src="{{ 'images/admin_ui_replicas_per_store.png' | relative_url }}" alt="CockroachDB Admin UI Replicas per Store" style="border:1px solid #eee;max-width:100%" />
 The graph displays the number of range replicas on each store. 
 
-By default, the cluster-wide replication zone is set to replicate data to any three nodes in your cluster, with ranges in each replica splitting once they get larger than 64 MB. The replicas are balanced evenly across the nodes. You can [Configure replication zones](https://www.cockroachlabs.com/docs/stable/configure-replication-zones.html) to set the number and location of replicas. You can monitor the changes in configuration using the Admin UI, as described in [Fault tolerance and recovery](https://www.cockroachlabs.com/docs/stable/demo-fault-tolerance-and-recovery.html).
+By default, the cluster-wide replication zone is set to replicate data to any three nodes in your cluster, with ranges in each replica splitting once they get larger than 64 MB. The replicas are balanced evenly across the nodes. You can [Configure replication zones](configure-replication-zones.html) to set the number and location of replicas. You can monitor the changes in configuration using the Admin UI, as described in [Fault tolerance and recovery](demo-fault-tolerance-and-recovery.html).
 
 ### Replicas
 <img src="{{ 'images/admin_ui_replicas.png' | relative_url }}" alt="CockroachDB Admin UI Replicas" style="border:1px solid #eee;max-width:100%" />

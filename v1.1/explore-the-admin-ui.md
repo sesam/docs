@@ -7,14 +7,14 @@ feedback: false
 CockroachDB's Admin UI provides details about your cluster and database configuration. It helps you optimize cluster performance by monitoring: 
 
 
-- [Runtime metrics](http://https://www.cockroachlabs.com/docs/dev/admin_ui_runtime_dashboard.html) 
-- [SQL metrics](http://https://www.cockroachlabs.com/docs/dev/admin_ui_sql_dashboard.html)
-- [Storage metrics](http://https://www.cockroachlabs.com/docs/dev/admin_ui_storage_dashboard.html)
-- [Replication metrics](http://https://www.cockroachlabs.com/docs/dev/admin_ui_replication_dashboard.html)
-- [Nodes]()
-- [Events]()
-- [Database configuration]()
-- [Jobs]()
+- [Runtime metrics](admin_ui_runtime_dashboard.html) 
+- [SQL metrics](admin_ui_sql_dashboard.html)
+- [Storage metrics](admin_ui_storage_dashboard.html)
+- [Replication metrics](admin_ui_replication_dashboard.html)
+- [Nodes](explore-the-admin-ui.html#summary-panel)
+- [Events](explore-the-admin-ui.html#events-list)
+- [Database configuration](admin_ui_databases_page.html)
+- [Jobs](admin_ui_jobs_page.html)
 
 <div id="toc"></div>
 
@@ -28,7 +28,7 @@ However, you can also set the CockroachDB Admin UI to a custom port using `--htt
 
 For additional guidance on accessing the Admin UI, see [Start a Local Cluster](start-a-local-cluster.html) and [Manual Deployment](manual-deployment.html).
 
-On accessing the Admin UI, you can view the [Cluster details](http://https://www.cockroachlabs.com/docs/dev/explore-the-admin-ui.html#cluster-overview), [Database details](https://www.cockroachlabs.com/docs/dev/explore-the-admin-ui.html#databases-overview), or [Jobs details]().
+On accessing the Admin UI, you can view the [Cluster details](explore-the-admin-ui.html#cluster-overview), [Database details](explore-the-admin-ui.html#databases-overview), or [Jobs details](admin_ui_jobs_page.html).
 
 ## Cluster Overview
 
@@ -36,9 +36,9 @@ Cluster Overview is the first page you see when you access the Admin UI.
 
 The page consists of three panels:
 
-- 	[Time series graphs](https://www.cockroachlabs.com/docs/dev/explore-the-admin-ui.html#time-series-graphs)
-- 	[Summary panel](https://www.cockroachlabs.com/docs/dev/explore-the-admin-ui.html#summary-panel)
-- 	[Events list](https://www.cockroachlabs.com/docs/dev/explore-the-admin-ui.html#events-list)
+- 	[Time series graphs](explore-the-admin-ui.html#time-series-graphs)
+- 	[Summary panel](explore-the-admin-ui.html#summary-panel)
+- 	[Events list](explore-the-admin-ui.html#events-list)
 
 <img src="{{ 'images/admin_ui.png' | relative_url }}" alt="CockroachDB Admin UI" style="border:1px solid #eee;max-width:100%" />
 
@@ -72,9 +72,9 @@ The graph displays the number of range replicas on each node.
 
 Ranges are subsets of your data, which are replicated to ensure survivability. Ranges are replicated to a configurable number of additional CockroachDB nodes. 
 
-By default, the cluster-wide replication zone is set to replicate data to any three nodes in your cluster, with ranges in each replica splitting once they get larger than 64 MB. The replicas are balanced evenly across the nodes. You can [Configure replication zones](https://www.cockroachlabs.com/docs/stable/configure-replication-zones.html) to set the number and location of replicas. You can monitor the changes in configuration using the Admin UI, as described in [Fault tolerance and recovery](https://www.cockroachlabs.com/docs/stable/demo-fault-tolerance-and-recovery.html).
+By default, the cluster-wide replication zone is set to replicate data to any three nodes in your cluster, with ranges in each replica splitting once they get larger than 64 MB. The replicas are balanced evenly across the nodes. You can [Configure replication zones](configure-replication-zones.html) to set the number and location of replicas. You can monitor the changes in configuration using the Admin UI, as described in [Fault tolerance and recovery](demo-fault-tolerance-and-recovery.html).
 
-For more information on replicas, see [Replication](https://www.cockroachlabs.com/docs/stable/high-availability.html#replication), or read the [CockroachDB design document](https://github.com/cockroachdb/cockroach/blob/master/docs/design.md#architecture).
+For more information on replicas, see [Replication](high-availability.html#replication), or read the [CockroachDB design document](https://github.com/cockroachdb/cockroach/blob/master/docs/design.md#architecture).
 
 #### Capacity
 <img src="{{ 'images/admin_ui_capacity.png' | relative_url }}" alt="CockroachDB Admin UI Capacity graph" style="border:1px solid #eee;max-width:100%" />
@@ -90,16 +90,16 @@ Available | The free storage capacity available to CockroachDB across all nodes.
 
 {{site.data.alerts.callout_info}}If you are running multiple nodes on a single machine and haven't specified the maximum allocated storage capacity for each node using the --store flag, then the available capacity displayed in the graph is incorrect. This is because when multiple nodes are running on a single machine, the hard disk of the machine is considered as available store for each node. The total available capacity is then displayed as the hard disk size multiplied by the number of nodes on the machine, while in reality, only one hard disk is available for all nodes. {{site.data.alerts.end}}
 
-You can configure the maximum allocated storage capacity for CockroachDB using the --store flag. For more information, see [Start a Node](https://www.cockroachlabs.com/docs/stable/start-a-node.html#store).
+You can configure the maximum allocated storage capacity for CockroachDB using the --store flag. For more information, see [Start a Node](start-a-node.html#store).
  
 
 In addition to the Overview dashboard, you can also monitor the following dashboards to gain insight into your cluster’s health and performance:
 
 
--	[Runtime dashboard](http://https://www.cockroachlabs.com/docs/dev/admin_ui_runtime_dashboard.html)
--	[SQL dashboard](http://https://www.cockroachlabs.com/docs/dev/admin_ui_sql_dashboard.html)
--	[Storage dashboard](http://https://www.cockroachlabs.com/docs/dev/admin_ui_storage_dashboard.html)
--	[Replication dashboard](http://https://www.cockroachlabs.com/docs/dev/admin_ui_replication_dashboard.html)
+-	[Runtime dashboard](admin_ui_runtime_dashboard.html)
+-	[SQL dashboard](admin_ui_sql_dashboard.html)
+-	[Storage dashboard](admin_ui_storage_dashboard.html)
+-	[Replication dashboard](admin_ui_replication_dashboard.html)
 
 {{site.data.alerts.callout_info}}The CockroachDB Admin UI has three additional dashboards: Distributed, Queues, and Slow Requests. These dashboards are important for CockroachDB developers. For monitoring CockroachDB, it is sufficient to monitor the Overview, Runtime, SQL, Storage, and Replication dashboards.{{site.data.alerts.end}}
 
@@ -118,7 +118,7 @@ Queries per second | Number of SQL queries executed per second.
 P50 Latency | 50th percentile of service latency. This is the average query execution time.
 P99 Latency | 99th percentile of service latency. This is the query execution time for the slowest (that is, longest-running) queries.
 
-{{site.data.alerts.callout_info}}[Decommissioned nodes]() are not included in the Total Nodes count. Hence if nodes are decommissioned, there appears to be a mismatch between the total nodes and dead nodes.{{site.data.alerts.end}}
+{{site.data.alerts.callout_info}}[Decommissioned nodes](explore-the-admin-ui.html#decommissioned-nodes) are not included in the Total Nodes count. Hence if nodes are decommissioned, there appears to be a mismatch between the total nodes and dead nodes.{{site.data.alerts.end}}
 
 To see details of nodes in your cluster, click **View nodes list** on the Summary panel. The following page is displayed:
 <img src="{{ 'images/recovery3.png' | relative_url }}" alt="CockroachDB Admin UI" style="border:1px solid #eee;max-width:100%" />
