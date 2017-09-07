@@ -51,7 +51,7 @@ All `node` subcommands support the following [general-use](#general) and [loggin
 Flag | Description
 -----|------------
 `--certs-dir` | The path to the [certificate directory](create-security-certificates.html). The directory must contain valid certificates if running in secure mode.<br><br>**Env Variable:** `COCKROACH_CERTS_DIR`<br>**Default:** `${HOME}/.cockroach-certs/`
-`--format` | How to disply table rows printed to the standard output. Possible values: `tsv`, `csv`, `pretty`, `records`, `sql`, `html`.<br><br>**Default:** `tsv`
+`--format` | How to display table rows printed to the standard output. Possible values: `tsv`, `csv`, `pretty`, `records`, `sql`, `html`.<br><br>**Default:** `tsv`
 `--host` | The server host to connect to. This can be the address of any node in the cluster. <br><br>**Env Variable:** `COCKROACH_HOST`<br>**Default:** `localhost`
 `--insecure` | Run in insecure mode. If this flag is not set, the `--certs-dir` flag must point to valid certificates.<br><br>**Env Variable:** `COCKROACH_INSECURE`<br>**Default:** `false`
 `--port` | The server port to connect to. <br><br>**Env Variable:** `COCKROACH_PORT`<br>**Default:** `26257`
@@ -79,7 +79,12 @@ If you need to troubleshoot this command's behavior, you can change its [logging
 
 ## Response
 
-For the `node ls` command, only the `id` field is returned for each node. For the `node status` command, all of the following fields are returned for each node.
+- The `node ls` command returns only the `id` field for each node.
+- By default, the `node status` command returns the `id`, `address`, `build`, `updated_at`, and `started_at` fields for each node.
+  - When the `--stats` flag is used with `node status`, the `live_bytes`, `key_bytes`, `value_bytes`, `intent_bytes`, and `system_bytes` fields are returned as well.
+  - When the `--ranges` flage is used with `node status`, the `replica_leaders`, `replica_leaseholders`, `ranges`, `ranges_unavailable`, and `ranges_underreplicated` fields are returned as well.
+  - When the `--decommission` flag is used with `node status`, the `is_live`, `gossiped_replicas`, `is_decommissioning`, and `is_draining` flags are returned as well.
+  - When the `--all` flag is used with `node status`, all of the following fields are returned.
 
 Field | Description
 ----------|------------
@@ -88,14 +93,20 @@ Field | Description
 `build` |
 `updated_at` |
 `started_at` |
+`replica_leaders` |
+`replica_leaseholders` |
+`ranges` |
+`ranges_unavailable` |
+`ranges_underreplicated` |
 `live_bytes` |
 `key_bytes` |
 `value_bytes` |
 `intent_bytes` |
 `system_bytes` |
-`leader_ranges` |
-`repl_ranges` |
-`avail_ranges` |
+`is_live` |
+`gossiped_replicas` |
+`is_decommissioning` |
+`is_draining` |
 
 ## Examples
 
