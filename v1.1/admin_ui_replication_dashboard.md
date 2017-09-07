@@ -16,11 +16,11 @@ By default, the time series panel displays the metrics for the entire cluster. T
 
 ## Review of CockroachDB terminology
 
-A CockroachDB cluster consists of **nodes**. Nodes contain one or more **stores**. Each store should be placed on a unique disk. Each store contains potentially many **ranges**, the lowest-level unit of key-value data. Ranges are replicated using the Raft consensus protocol. More than one **replica** for a range will never be placed on the same store or even the same node. 
+A CockroachDB cluster consists of **nodes**. Nodes contain one or more **stores**. Each store should be placed on a unique disk. Each store contains many **ranges**, the lowest-level unit of key-value data. Ranges are replicated using the Raft consensus protocol. More than one **replica** for a range will never be placed on the same store or even the same node. 
 
-Raft elects a relatively long-lived **leader** which must be involved to propose commands. To ensure tasks are carried out by a single replica at a time, **Range Leases** are used. A replica establishes itself as owning the lease on a range by committing a special lease acquisition log entry through raft. All Reads and writes are generally addressed to the replica holding the lease. 
+Raft elects a **leader** which can propose commands. **Range Leases** are an optimization to speed up read commands, which ensure we do not require quorum for reads. A replica establishes itself as owning the lease on a range by committing a special lease acquisition log entry through Raft. All Reads and writes are generally addressed to the replica holding the lease. 
 
-When a cluster is first initialized, the few default starting ranges will only have a single replica, but as soon as other nodes are available, they will replicate to them until they've reached their desired replication factor, the default being 3. If a range does not have enough replicas, the range is said to be **under-replicated**. If a store has not been heard from in some time, the default setting being 5 minutes, the cluster will consider this store to be dead. When this happens, all ranges that have replicas on that store are determined to be **unavailable**. 
+When a cluster is first initialized, the few default starting ranges will only have a single replica, but as soon as other nodes are available, they will replicate to them until they've reached their desired replication factor, the default being 3. If a range does not have enough replicas, the range is said to be **under-replicated**. If a store has not been heard from in some time, the default setting being 5 minutes, the cluster will consider this store to be dead. <Explain unavailable ranges here>
 
 Zone configs can be used to control a range's replication factor and add constraints as to where the range's replicas can be located. When there is a change in a range's zone config, the range will up or down replicate to the appropriate number of replicas and move its replicas to the appropriate stores based on zone config's constraints.
 
@@ -31,7 +31,7 @@ As more data is added to the system, some stores may grow faster than others. To
 - The total size of the data used per store
 - Free space available per store
 
-## Replication dashboard
+## Replication Dashboard
 
 The Replication dashboard displays the following time-series graphs:
 
@@ -43,13 +43,13 @@ On hovering over the graph, the values for the following metrics are displayed:
 Metric | Description
 --------|----
 Ranges | The number of ranges across all nodes in the cluster.
-Leaders | The number of leaders across all nodes in the cluster.
-Lease Holders | The number of leaders with leases across all nodes in the cluster.
-Leaders w/o Leases | The number of leaders without leases across all nodes in the cluster.
+Leaders | The number of ranges with leaders across all nodes in the cluster. If the number does not match number of ranges for a long time, troubleshoot your cluster.
+Lease Holders | The number of ranges that have leases across all nodes in the cluster.
+Leaders w/o Leases | The number of Raft leaders without leases across all nodes in the cluster. If the number if non-zero for a long time, troubleshoot your cluster. 
 Unavailable | The number of unavailable ranges across all nodes in the cluster.
 Under-replicated | The number of under-replicated ranges across all nodes in the cluster.
 
-### Replicas per Store
+### Replicas Per Store
 <img src="{{ 'images/admin_ui_replicas_per_store.png' | relative_url }}" alt="CockroachDB Admin UI Replicas per Store" style="border:1px solid #eee;max-width:100%" />
 The graph displays the number of range replicas on each store. 
 

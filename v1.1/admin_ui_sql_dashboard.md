@@ -28,7 +28,7 @@ The graph helps you correlate SQL Query count to byte traffic, especially in bul
 
 ## SQL Queries
 <img src="{{ 'images/admin_ui_sql_queries.png' | relative_url }}" alt="CockroachDB Admin UI SQL Queries" style="border:1px solid #eee;max-width:100%" />
-The graph displays the average number of SELECT, INSERT, UPDATE, and DELETE statements per second across all nodes.
+The graph displays the average number of SELECT, INSERT, UPDATE, and DELETE, and DISTSQL reads per second averaged over 10 seconds across all nodes.
 
 ## Transactions
 <img src="{{ 'images/admin_ui_transactions.png' | relative_url }}" alt="CockroachDB Admin UI Transactions" style="border:1px solid #eee;max-width:100%" />

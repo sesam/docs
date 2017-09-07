@@ -38,7 +38,7 @@ If Go Total or CGO Total fluctuates or grows steadily over time, [contact us](ht
 
 ## CPU Time
 <img src="{{ 'images/admin_ui_cpu_time.png' | relative_url }}" alt="CockroachDB Admin UI CPU Time" style="border:1px solid #eee;max-width:100%" />
-The graph displays the CPU time used by the CockroachDB User and CockroachDB system-level operations across all nodes.
+The graph displays the CPU time used by CockroachDB user and system-level operations across all nodes.
 On hovering over the graph, the values for the following metrics are displayed:
 
 Metric | Description

@@ -20,7 +20,7 @@ CockroachDB's Admin UI provides details about your cluster and database configur
 
 ## Access the Admin UI
 
-You can access the UI from any node in the cluster, each of which will show nearly identical data.
+You can access the Admin UI from any node in the cluster, each of which will show nearly identical data.
 
 By default, you can access it via HTTP on port `8080` of whatever value you used for the node's `--host` value. For example, `http://<any node host>:8080`.
 
@@ -58,21 +58,19 @@ The time series panel displays the graphs for the following key metrics:
 
 #### SQL Queries
 <img src="{{ 'images/admin_ui_sql_queries.png' | relative_url }}" alt="CockroachDB Admin UI SQL Queries graph" style="border:1px solid #eee;max-width:100%" />
-The graph displays the average number of SELECT, INSERT, UPDATE, and DELETE statements per second across all nodes in the cluster.
+The graph displays the average number of SELECT, INSERT, UPDATE, and DELETE, and DISTSQL Read statements per second averaged over 10 seconds across all nodes in the cluster.
 
 #### Service Latency: SQL, 99th percentile
 <img src="{{ 'images/admin_ui_service_latency_99_percentile.png' | relative_url }}" alt="CockroachDB Admin UI Service Latency graph" style="border:1px solid #eee;max-width:100%" />
 The graph displays the time required for each node to execute 99% of the queries over the last minute. The service latency is calculated as the time between receiving a query and returning a response. This time does not include network latency between the node and client.  
 
-The 99th percentile graph shows the query execution time for the slowest (that is, longest-running) queries. 
-
 #### Replicas per Node
 <img src="{{ 'images/admin_ui_replicas_per_node.png' | relative_url }}" alt="CockroachDB Admin UI Replicas per Node graph" style="border:1px solid #eee;max-width:100%" />
 The graph displays the number of range replicas on each node. 
 
-Ranges are subsets of your data, which are replicated to ensure survivability. Ranges are replicated to a configurable number of additional CockroachDB nodes. 
+Ranges are subsets of your data, which are replicated to ensure survivability. Ranges are replicated to a configurable number of CockroachDB nodes. 
 
-By default, the cluster-wide replication zone is set to replicate data to any three nodes in your cluster, with ranges in each replica splitting once they get larger than 64 MB. The replicas are balanced evenly across the nodes. You can [Configure replication zones](configure-replication-zones.html) to set the number and location of replicas. You can monitor the changes in configuration using the Admin UI, as described in [Fault tolerance and recovery](demo-fault-tolerance-and-recovery.html).
+By default, the cluster-wide replication zone is set to replicate data to any three nodes in your cluster, with ranges in each replica splitting once they get larger than 64 MiB. The replicas are balanced evenly across the nodes. You can [Configure replication zones](configure-replication-zones.html) to set the number and location of replicas. You can monitor the changes in configuration using the Admin UI, as described in [Fault tolerance and recovery](demo-fault-tolerance-and-recovery.html).
 
 For more information on replicas, see [Replication](high-availability.html#replication), or read the [CockroachDB design document](https://github.com/cockroachdb/cockroach/blob/master/docs/design.md#architecture).
 
@@ -103,7 +101,7 @@ In addition to the Overview dashboard, you can also monitor the following dashbo
 
 {{site.data.alerts.callout_info}}The CockroachDB Admin UI has three additional dashboards: Distributed, Queues, and Slow Requests. These dashboards are important for CockroachDB developers. For monitoring CockroachDB, it is sufficient to monitor the Overview, Runtime, SQL, Storage, and Replication dashboards.{{site.data.alerts.end}}
 
-### Summary panel
+### Summary Panel
 <img src="{{ 'images/admin_ui_summary_panel.png' | relative_url }}" alt="CockroachDB Admin UI Summary Panel" style="border:1px solid #eee;max-width:100%" />
 
 The Summary panel provides information about:
@@ -111,35 +109,41 @@ The Summary panel provides information about:
 Metric | Description
 --------|----
 Total Nodes | Total number of nodes in the cluster.<br><br>You can further drill down into the nodes details by clicking on **View nodes list**.
-Dead Nodes | The number of dead nodes in the cluster.
-Capacity Used | Storage capacity used as a percentage of total storage capacity allocated across all nodes.<br><br>
-Unavailable Ranges | <Any non-zero number is bad. That means cluster is not stable. Go troubleshoot the cluster.>
+Dead Nodes | The number of dead nodes in the cluster. Dead node is a node that is no longer accessible to the cluster. 
+Capacity Used | Storage capacity used as a percentage of total storage capacity allocated across all nodes.<br><br> Same note as available capacity.
+Unavailable Ranges | Number of unavailable ranges in the cluster. A non-zero number indicates an unstable cluster. 50% or more replicas are missing. 
 Queries per second | Number of SQL queries executed per second. 
 P50 Latency | 50th percentile of service latency. This is the average query execution time.
 P99 Latency | 99th percentile of service latency. This is the query execution time for the slowest (that is, longest-running) queries.
 
-{{site.data.alerts.callout_info}}[Decommissioned nodes](explore-the-admin-ui.html#decommissioned-nodes) are not included in the Total Nodes count. Hence if nodes are decommissioned, there appears to be a mismatch between the total nodes and dead nodes.{{site.data.alerts.end}}
+{{site.data.alerts.callout_info}}<a href='explore-the-admin-ui.html#decommissioned-nodes'>Decommissioned nodes</a> are not included in the Total Nodes count.{{site.data.alerts.end}}
 
 To see details of nodes in your cluster, click **View nodes list** on the Summary panel. The following page is displayed:
 <img src="{{ 'images/recovery3.png' | relative_url }}" alt="CockroachDB Admin UI" style="border:1px solid #eee;max-width:100%" />
 
 #### Live Nodes
-Live nodes are nodes that are online and responding. They are indicated with a green dot next to them. If a node is removed, after about 1 minute, the dot next to the removed node will turn yellow, indicating that the node is not responding. After about 10 minutes, the removed node is moved to the Dead Nodes section, indicating that the node is not expected to come back. 
+Live nodes are nodes that are online and responding. They are indicated with a green dot next to them. If a node is removed, after about 1 minute, the dot next to the removed node will turn yellow, indicating that the node is not responding. By default, after 5 minutes, the removed node is moved to the Dead Nodes section, indicating that the node is not expected to come back. You can configure the time interval after the node is considered dead using the cluster setting. <give link to cluster setting>
+
+You can click on any of the nodes to view details about the node.
+
+You can click on **View Logs** to see the logs for that node.
 
 #### Decommissioned Nodes
 <Link to decommissioned nodes doc>
 The total nodes count on the Summary panel does not include the decommissioned nodes. The Summary panel does not include Decommissioned nodes at all.
 
 #### Dead Nodes
-The Dead Nodes table shows the dead nodes in the cluster. A node is considered to be dead if it does not respond for 10 minutes and is not expected to come back online. 
+The Dead Nodes table lists the dead nodes in the cluster. A node is considered to be dead if it does not respond for 5 minutes, as defined by <cluster setting> and is assumed it will not come back online. Talk about clsuetr repair.
 
-You can click on any of the nodes to view details about the node.
-
-You can click on **View Logs** to see the logs for that node.
-
-
-### Events list
+### Events List
 <img src="{{ 'images/admin_ui_events.png' | relative_url }}" alt="CockroachDB Admin UI Events" style="border:1px solid #eee;max-width:100%" />
 
 The Events panel displays the 10 most recent events logged for the all nodes across the cluster.
 To see the list of all events, click **View all events** on the Events panel. 
+
+Type of events:
+- Table created
+- DB created
+- Node joins cluster
+ 
+
