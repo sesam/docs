@@ -6,7 +6,7 @@ toc: false
 
 To view details for each node in the cluster, use the `cockroach node` [command](cockroach-commands.html) with the appropriate subcommands and flags.
 
-The `cockroach node` command is also used in the process of decommissioning nodes for permanent removal. See [Remove Nodes](remove-nodes.html) for more details.
+<span class="version-tag">New in v1.1:</span> The `cockroach node` command is also used in the process of decommissioning nodes for permanent removal. See [Remove Nodes](remove-nodes.html) for more details.
 
 <div id="toc"></div>
 
@@ -14,19 +14,34 @@ The `cockroach node` command is also used in the process of decommissioning node
 
 Subcommand | Usage
 -----------|------
-`ls` | List the ID of each node in the cluster.
-`status` | View the status of one or all nodes.
-`decommission` | Decommission nodes for permanent removal. See [Remove Nodes](remove-nodes.html) for more details.
-`recommission` | Recommission nodes that were accidentally decommissioned. See [Recommission Nodes](remove-nodes.html#recommission-nodes) for more details.
+`ls` | List the ID of each active node in the cluster. This does not include dead nodes or inactive nodes (i.e., nodes that have been decommissioned). To retrieve the IDS for inactive nodes, use `node status --decommision`.
+`status` | View the status of one or all nodes. Depending on flags used, this can include details about range/replicas, disk usage, and decommissioning progress.
+`decommission` | <span class="version-tag">New in v1.1:</span> Decommission nodes for permanent removal. See [Remove Nodes](remove-nodes.html) for more details.
+`recommission` | <span class="version-tag">New in v1.1:</span> Recommission nodes that were accidentally decommissioned. See [Recommission Nodes](remove-nodes.html#recommission-nodes) for more details.
 
 ## Synopsis
 
 ~~~ shell
-# List node IDs:
+# List the IDs of active nodes:
 $ cockroach node ls <flags>
 
-# Show the status of nodes:
-$ cockroach node status <optional node ID> <flags>
+# Show status details for active nodes:
+$ cockroach node status <flags>
+
+# Show status and range/replica details for active nodes:
+$ cockroach node status --ranges <flags>
+
+# Show status and disk usage details for active nodes:
+$ cockroach node status --stats <flags>
+
+# Show status and decommissioning details for active and inactive nodes:
+$ cockroach node status --decommission <flags>
+
+# Show complete status details for active and inactive nodes:
+$ cockroach node status --all <flags>
+
+# Show status details for a specific node:
+$ cockroach node status <node ID> <flags>
 
 # Decommission nodes:
 $ cockroach node decommission <node IDs> <flags>
@@ -79,34 +94,47 @@ If you need to troubleshoot this command's behavior, you can change its [logging
 
 ## Response
 
-- The `node ls` command returns only the `id` field for each node.
-- By default, the `node status` command returns the `id`, `address`, `build`, `updated_at`, and `started_at` fields for each node.
-  - When the `--stats` flag is used with `node status`, the `live_bytes`, `key_bytes`, `value_bytes`, `intent_bytes`, and `system_bytes` fields are returned as well.
-  - When the `--ranges` flage is used with `node status`, the `replica_leaders`, `replica_leaseholders`, `ranges`, `ranges_unavailable`, and `ranges_underreplicated` fields are returned as well.
-  - When the `--decommission` flag is used with `node status`, the `is_live`, `gossiped_replicas`, `is_decommissioning`, and `is_draining` flags are returned as well.
-  - When the `--all` flag is used with `node status`, all of the following fields are returned.
+The `cockroach node` subcommands return the following fields for each node.
+
+### `node ls`
 
 Field | Description
-----------|------------
-`id` |
-`address` |
-`build` |
-`updated_at` |
-`started_at` |
-`replica_leaders` |
-`replica_leaseholders` |
-`ranges` |
-`ranges_unavailable` |
-`ranges_underreplicated` |
-`live_bytes` |
-`key_bytes` |
-`value_bytes` |
-`intent_bytes` |
-`system_bytes` |
-`is_live` |
-`gossiped_replicas` |
-`is_decommissioning` |
-`is_draining` |
+------|------------
+`id` | The ID of the node.
+
+### `node status`
+
+Field | Description
+------|------------
+`id` | The ID of the node.<br><br>**Required flag:** None
+`address` | The address of the node.<br><br>**Required flag:** None
+`build` | The version of CockroachDB running on the node. If the binary was built from source, this will be the SHA hash of the commit used.<br><br>**Required flag:** None
+`updated_at` | The date and time when the node last reported its status.<br><br>**Required flag:** None
+`started_at` | The date and time when the node was started.<br><br>**Required flag:** None
+`replicas_leaders` | The number of range replicas on the node that are the Raft leader for their range. See `replicas_leaseholders` below for more details.<br><br>**Required flag:** `--ranges` or `--all`
+`replicas_leaseholders` | The number of range replicas on the node that are the leaseholder for their range. A "leaseholder" replica handles all read requests for a range and directs write requests to the range's Raft leader (usually the same replica as the leaseholder).<br><br>**Required flag:** `--ranges` or `--all`
+`ranges` | The number of ranges that have replicas on the node.<br><br>**Required flag:** `--ranges` or `--all`
+`ranges_unavailable` | The number of unavailable ranges that have replicas on the node.<br><br>**Required flag:** `--ranges` or `--all`
+`ranges_underreplicated` | The number of underreplicated ranges that have replicas on the node.<br><br>**Required flag:** `--ranges` or `--all`
+`live_bytes` | The amount of live data used by both applications and the CockroachDB system. This excludes historical and deleted data.<br><br>**Required flag:** `--stats` or `--all`
+`key_bytes` | The amount of live and non-live data from keys in the key-value storage layer. This does not include data used by the CockroachDB system.<br><br>**Required flag:** `--stats` or `--all`
+`value_bytes` | The amount of live and non-live data from values in the key-value storage layer. This does not include data used by the CockroachDB system.<br><br>**Required flag:** `--stats` or `--all`
+`intent_bytes` | The amount of non-live data associated with uncommitted (or recently-committed) transactions.<br><br>**Required flag:** `--stats` or `--all`
+`system_bytes` | The amount of data used just by the CockroachDB system.<br><br>**Required flag:** `--stats` or `--all`
+`is_live` | If `true`, the node is live.<br><br>**Required flag:** `--decommission` or `--all`
+`gossiped_replicas` | The number of replicas on the node that are active members of a range. After decommissioning, this should be 0.<br><br>**Required flag:** `--decommission` or `--all`
+`is_decommissioning` | If `true`, the node is marked for decommissioning. See [Remove Nodes](remove-nodes.html) for more details.<br><br>**Required flag:** `--decommission` or `--all`
+`is_draining` | If `true`, the range replicas and range leases are being moved off the node. This happens when a live node is being decommissioned. See [Remove Nodes](remove-nodes.html) for more details.<br><br>**Required flag:** `--decommission` or `--all`
+
+### `node decommission`
+
+Field | Description
+------|------------
+`id` | The ID of the node.
+`is_live` | If `true`, the node is is live.
+`gossiped_replicas` | The number of replicas on the node that are active members of a range. After decommissioning, this should be 0.
+`is_decommissioning` | If `true`, the node is marked for decommissioning. See [Remove Nodes](remove-nodes.html) for more details.
+`is_draining` | If `true`, the range replicas and range leases are being moved off the node. This happens when a live node is being decommissioned. See [Remove Nodes](remove-nodes.html) for more details.
 
 ## Examples
 

@@ -5,7 +5,7 @@ toc: false
 toc_not_nested: true
 ---
 
-This page shows you how to decommission and permanently remove one or more nodes from a CockroachDB cluster. You might do this, for example, when downsizing a cluster or reacting to hardware failures.
+<span class="version-tag">New in v1.1:</span> This page shows you how to decommission and permanently remove one or more nodes from a CockroachDB cluster. You might do this, for example, when downsizing a cluster or reacting to hardware failures.
 
 To temporarily stop a node, for example, during the process of [upgrading your cluster's version of CockroachDB](upgrade-cockroach-version.html), see [Stop a Node](stop-a-node.html).
 
@@ -174,7 +174,7 @@ Open the Admin UI, click **View nodes list** in the **Summary** area, and note t
 
 ### Step 2. Mark the dead node as decommissioned
 
-SSH to any live node in the cluster and run the `cockroach node decommission` command with the ID of the node to officially decommission:
+SSH to any live node in the cluster and run the [`cockroach node decommission`](view-node-details.html) command with the ID of the node to officially decommission:
 
 {{site.data.alerts.callout_info}}Be sure to include <code>--wait=live</code>. If not specified, this flag defaults to <code>--wait=all</code>, which will cause the <code>node decommission</code> command to hang indefinitely.{{site.data.alerts.end}}
 
@@ -231,7 +231,7 @@ In the Admin UI, go to the **Replication** dashboard and hover over the **Replic
 
 ### Step 3. Decommission the nodes
 
-SSH to any live node in the cluster and run the `cockroach node decommission` command with the IDs of the nodes to officially decommission:
+SSH to any live node in the cluster and run the [`cockroach node decommission`](view-node-details.html) command with the IDs of the nodes to officially decommission:
 
 {{site.data.alerts.callout_info}}If there's a chance that one or more of the nodes will be offline during this process, be sure to include <code>--wait=live</code>. This will ensure that the command will not wait indefinitely for dead nodes to finish decommissioning.{{site.data.alerts.end}}
 
@@ -332,7 +332,7 @@ Open the Admin UI, click **View nodes list** in the **Summary** area, and note t
 
 ### Step 2. Recommission the nodes
 
-SSH to one of the live nodes and execute the `cockroach node recommission` command with the IDs of the nodes to recommission:
+SSH to one of the live nodes and execute the [`cockroach node recommission`](view-node-details.html) command with the IDs of the nodes to recommission:
 
 <div class="filter-content" markdown="1" data-scope="secure">
 ~~~ shell
